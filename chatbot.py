@@ -90,19 +90,26 @@ class ProductManager:
         return load_data
 
     def get_product(self, code):
-        products = self.load_products()
-        for product in products:
+        for product in self.load_products():
             if product['code'] == code:
                 return f'Code: {product['code']}\nName: {product['name']}\nPrice: {product['price']}\nColors: {product['colors']}\nStock: {product['stock']}\nDescription: {product['description']}'
         else:
             return None
+
+    def is_avaible(self, code):
+        for product in self.load_products():
+            if product['code'] == code:
+                if int(product['stock']) > 0:
+                    return True
+                else:
+                    return False
 
 
 def main():
     chatbot = ChatBot()
     product_manager = ProductManager()
     chatbot.chat()
-    print(product_manager.get_product('N005'))
+    print(product_manager.is_avaible('N005'))
 
 
 if __name__ == '__main__':
