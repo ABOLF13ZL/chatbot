@@ -82,17 +82,27 @@ class ChatBot:
 
 class ProductManager:
     def __init__(self):
-        self.path = Path('products.json')
+        self.path = Path(r'data\products.json')
 
     def load_products(self):
         data = self.path.read_text()
         load_data = json.loads(data)
         return load_data
 
+    def get_product(self, code):
+        products = self.load_products()
+        for product in products:
+            if product['code'] == code:
+                return f'Code: {product['code']}\nName: {product['name']}\nPrice: {product['price']}\nColors: {product['colors']}\nStock: {product['stock']}\nDescription: {product['description']}'
+        else:
+            return None
+
 
 def main():
     chatbot = ChatBot()
+    product_manager = ProductManager()
     chatbot.chat()
+    print(product_manager.get_product('N005'))
 
 
 if __name__ == '__main__':
