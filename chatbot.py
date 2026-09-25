@@ -24,7 +24,7 @@ class ChatBot:
 
     def handle_command(self, user_input):
         command = user_input.lower().strip()
-        parts = user_input.lower().split()
+        parts = user_input.split()
         result = ''
         system_messages = [
             m for m in self.messages if m['role'] == 'system']
@@ -43,13 +43,15 @@ class ChatBot:
             return result
 
         elif command == '/help':
-            return 'Available commands:\n\n/help      Show commands\n/clear     Clear conversation\n/history   Show conversation\n/product Get product\n/q         Exit'
+            return 'Available commands:\n\n/help      Show commands\n/clear     Clear conversation\n/history   Show conversation\n/product "Code" Get product\n/q         Exit'
 
         elif command == '/stats':
             return f'Messages: {len(self.messages)}\nSystem messages: {len(system_messages)}\nUser messages: {len(user_messages)}\nAssistant messages: {len(assistant_messages)}'
 
-        elif parts[0] == '/product':
+        elif len(parts) == 2 and parts[0].lower() == '/product':
             product = self.product_manager.get_product(parts[1])
+            if product is None:
+                return 'This product does not exist.'
             return product
 
         elif command == '/q':
@@ -107,16 +109,16 @@ class ProductManager:
             if product['code'] == code:
                 if int(product['stock']) > 0:
                     return True
-                elif int(product['stock']) < 0:
+                elif int(product['stock']) == 0:
                     return False
                 else:
                     return None
 
     def get_available_products(self):
-        available_products = ''
+        available_products = []
         for product in self.load_products():
             if int(product['stock']) > 0:
-                available_products += product
+                available_products.append(product)
         return available_products
 
 
