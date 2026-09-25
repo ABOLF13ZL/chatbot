@@ -104,12 +104,19 @@ class ProductManager:
                 else:
                     return False
 
+    def get_available_products(self):
+        available_products = ''
+        for product in self.load_products():
+            if int(product['stock']) > 0:
+                available_products += f'Code: {product['code']}\nName: {product['name']}\nPrice: {product['price']}\nColors: {product['colors']}\nStock: {product['stock']}\nDescription: {product['description']}\n{'-' * 10}\n'
+        return available_products
+
 
 def main():
     chatbot = ChatBot()
     product_manager = ProductManager()
     chatbot.chat()
-    print(product_manager.is_avaible('N005'))
+    print(product_manager.get_available_products())
 
 
 if __name__ == '__main__':
