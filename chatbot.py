@@ -24,6 +24,7 @@ class ChatBot:
 
     def handle_command(self, user_input):
         command = user_input.lower().strip()
+        parts = user_input.lower().split()
         result = ''
         system_messages = [
             m for m in self.messages if m['role'] == 'system']
@@ -42,14 +43,14 @@ class ChatBot:
             return result
 
         elif command == '/help':
-            return 'Available commands:\n\n/help      Show commands\n/clear     Clear conversation\n/history   Show conversation\n/q         Exit'
+            return 'Available commands:\n\n/help      Show commands\n/clear     Clear conversation\n/history   Show conversation\n/product Get product\n/q         Exit'
 
         elif command == '/stats':
             return f'Messages: {len(self.messages)}\nSystem messages: {len(system_messages)}\nUser messages: {len(user_messages)}\nAssistant messages: {len(assistant_messages)}'
 
-        elif command == '/product':
-            code = input('Product code: ').strip
-            return self.product_manager.get_product(code)
+        elif parts[0] == '/product':
+            product = self.product_manager.get_product(parts[1])
+            return product
 
         elif command == '/q':
             return True
@@ -97,23 +98,25 @@ class ProductManager:
     def get_product(self, code):
         for product in self.load_products():
             if product['code'] == code:
-                return f'Code: {product['code']}\nName: {product['name']}\nPrice: {product['price']}\nColors: {product['colors']}\nStock: {product['stock']}\nDescription: {product['description']}'
+                return product
         else:
             return None
 
-    def is_avaible(self, code):
+    def is_available(self, code):
         for product in self.load_products():
             if product['code'] == code:
                 if int(product['stock']) > 0:
                     return True
-                else:
+                elif int(product['stock']) < 0:
                     return False
+                else:
+                    return None
 
     def get_available_products(self):
         available_products = ''
         for product in self.load_products():
             if int(product['stock']) > 0:
-                available_products += f'Code: {product['code']}\nName: {product['name']}\nPrice: {product['price']}\nColors: {product['colors']}\nStock: {product['stock']}\nDescription: {product['description']}\n{'-' * 10}\n'
+                available_products += product
         return available_products
 
 
