@@ -1,5 +1,7 @@
 from openai import OpenAI, OpenAIError
+from pathlib import Path
 import dotenv
+import json
 import os
 
 dotenv.load_dotenv()
@@ -70,12 +72,17 @@ class ChatBot:
 
             if result is True:
                 break
-            if result != None:
+            if result is not None:
                 print(result)
                 continue
 
             bot_answer = self.get_response(user_input)
             print(bot_answer)
+
+
+class ProductManager:
+    def __init__(self):
+        path = Path('products.json')
 
 
 def main():
