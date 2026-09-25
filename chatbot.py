@@ -20,6 +20,7 @@ class ChatBot:
         self.messages = [
             {'role': 'system', 'content': 'Give short answer.'}
         ]
+        self.product_manager = ProductManager()
 
     def handle_command(self, user_input):
         command = user_input.lower().strip()
@@ -45,6 +46,10 @@ class ChatBot:
 
         elif command == '/stats':
             return f'Messages: {len(self.messages)}\nSystem messages: {len(system_messages)}\nUser messages: {len(user_messages)}\nAssistant messages: {len(assistant_messages)}'
+
+        elif command == '/product':
+            code = input('Product code: ').strip
+            return self.product_manager.get_product(code)
 
         elif command == '/q':
             return True
@@ -114,9 +119,7 @@ class ProductManager:
 
 def main():
     chatbot = ChatBot()
-    product_manager = ProductManager()
     chatbot.chat()
-    print(product_manager.get_available_products())
 
 
 if __name__ == '__main__':
