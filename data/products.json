@@ -1,0 +1,42 @@
+[
+  {
+    "code": "N001",
+    "name": "Roosari harir",
+    "price": "350_000",
+    "colors": "Sabz",
+    "stock": "6",
+    "description": ""
+  },
+  {
+    "code": "N002",
+    "name": "Roosari nakhi",
+    "price": "460_000",
+    "colors": "Zard",
+    "stock": "9",
+    "description": ""
+  },
+  {
+    "code": "N003",
+    "name": "Roosari abrishami",
+    "price": "760_000",
+    "colors": "Ghermez",
+    "stock": "23",
+    "description": ""
+  },
+  {
+    "code": "N004",
+    "name": "Shal breshka",
+    "price": "490_000",
+    "colors": "Sefid",
+    "stock": "11",
+    "description": ""
+  },
+  {
+    "code": "N005",
+    "name": "Shal toori",
+    "price": "250_000",
+    "colors": "Meshki",
+    "stock": "7",
+    "description": ""
+  }
+]
