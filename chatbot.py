@@ -19,6 +19,34 @@ class ChatBot:
             {'role': 'system', 'content': 'Give short answer.'}
         ]
 
+    def handle_command(self, user_input):
+        command = user_input.lower().strip()
+        result = ''
+        system_messages = [
+            m for m in self.messages if m['role'] == 'system']
+        user_messages = [
+            m for m in self.messages if m['role'] == 'user']
+        assistant_messages = [
+            m for m in self.messages if m['role'] == 'assistant']
+        if command == '/clear':
+            self.messages = [*system_messages]
+            return 'Conversation history cleared.'
+
+        elif command == '/history':
+            for history in self.messages:
+                result += (f'{history['role'].title()}: {history['content']}\n')
+
+            return result
+
+        elif command == '/help':
+            return 'Available commands:\n\n/help      Show commands\n/clear     Clear conversation\n/history   Show conversation\n/q         Exit'
+
+        elif command == '/stats':
+            return f'Messages: {len(self.messages)}\nSystem messages: {len(system_messages)}\nUser messages: {len(user_messages)}\nAssistant messages: {len(assistant_messages)}'
+
+        elif command == '/q':
+            return True
+
     def get_response(self, message):
         try:
             self.messages.append({'role': 'user', 'content': message})
@@ -37,10 +65,14 @@ class ChatBot:
     def chat(self):
         while True:
             user_input = input(
-                'Ask something(Enter "q" to terminate): ')
-            if user_input.lower().strip() == 'q':
-                print('Good luck')
+                'Ask something(Enter "/q" to terminate): ')
+            result = self.handle_command(user_input)
+
+            if result is True:
                 break
+            if result != None:
+                print(result)
+                continue
 
             bot_answer = self.get_response(user_input)
             print(bot_answer)
