@@ -82,7 +82,12 @@ class ChatBot:
 
 class ProductManager:
     def __init__(self):
-        path = Path('products.json')
+        self.path = Path('products.json')
+
+    def load_products(self):
+        data = self.path.read_text()
+        load_data = json.loads(data)
+        return load_data
 
 
 def main():
