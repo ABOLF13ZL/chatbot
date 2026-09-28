@@ -57,6 +57,9 @@ class ChatBot:
         elif command == '/q':
             return True
 
+    def get_product(self, code):
+        return self.product_manager.get_product(code)
+
     def get_response(self, message):
         try:
             self.messages.append({'role': 'user', 'content': message})
