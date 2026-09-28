@@ -63,6 +63,10 @@ class ChatBot:
     def format_product(self, product):
         return f'Product code: {product['code']}\nProduct name: {product['name']}\nPrice: {product['price']}\nStock: {product['stock']}'
 
+    def get_product_context(self, code):
+        product = self.get_product(code)
+        return self.format_product(product)
+
     def get_response(self, message):
         try:
             self.messages.append({'role': 'user', 'content': message})
@@ -130,7 +134,8 @@ class ProductManager:
 
 def main():
     chatbot = ChatBot()
-    chatbot.chat()
+    # chatbot.chat()
+    print(chatbot.get_product_context('N001'))
 
 
 if __name__ == '__main__':
