@@ -53,7 +53,7 @@ Keep your answers short and clear.'''}
             return f'Messages: {len(self.messages)}\nSystem messages: {len(system_messages)}\nUser messages: {len(user_messages)}\nAssistant messages: {len(assistant_messages)}'
 
         elif len(parts) == 2 and parts[0].lower() == '/product':
-            product = self.product_manager.get_product(parts[1])
+            product = self.product_manager.get_product_by_code(parts[1])
             if product is None:
                 return 'This product does not exist.'
             return product
@@ -62,7 +62,7 @@ Keep your answers short and clear.'''}
             return True
 
     def get_product(self, code):
-        return self.product_manager.get_product(code)
+        return self.product_manager.get_product_by_code(code)
 
     def format_product(self, product):
         return f'Product code: {product['code']}\nProduct name: {product['name']}\nPrice: {product['price']}\nStock: {product['stock']}'
@@ -126,9 +126,16 @@ class ProductManager:
         load_data = json.loads(data)
         return load_data
 
-    def get_product(self, code):
+    def get_product_by_code(self, code):
         for product in self.load_products():
             if product['code'] == code:
+                return product
+        else:
+            return None
+        
+    def get_product_by_name(self, name):
+        for product in self.load_products():
+            if product['name'] == name:
                 return product
         else:
             return None
