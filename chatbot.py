@@ -18,7 +18,11 @@ class ChatBot:
         else:
             raise OpenAIError('API key does not exist.')
         self.messages = [
-            {'role': 'system', 'content': 'Give short answer.'}
+            {'role': 'system', 'content': '''You are a helpful AI assistant for an online store.
+Answer the user's questions using the provided product information.
+Never invent or guess product details such as price, stock, name, or product code.
+If the provided information is not enough to answer the question, clearly say that the information is not available.
+Keep your answers short and clear.'''}
         ]
         self.product_manager = ProductManager()
 
@@ -69,13 +73,20 @@ class ChatBot:
             return ('This product does not exist.')
         return self.format_product(product)
 
-    def get_response(self, message):
+    def extract_product_code(self, message):
+        text = message.split()
+        for word in text:
+            if word.startwith('N') and word[1:].isdigit():
+                return word
+
+    def get_response(self, message, context=''):
         try:
-            self.messages.append({'role': 'user', 'content': message})
+            messages = [*self.messages, {'role': 'system', 'content': context}]
+            messages.append({'role': 'user', 'content': message})
             response = self.client.chat.completions.create(
                 model='openai/gpt-oss-120b',
                 temperature=0.7,
-                messages=self.messages
+                messages=messages
             )
             result = response.choices[0].message.content
             self.messages.append({'role': 'assistant', 'content': result})
@@ -96,7 +107,8 @@ class ChatBot:
                 print(result)
                 continue
 
-            bot_answer = self.get_response(user_input)
+            context = self.get_product_context('N005')
+            bot_answer = self.get_response(user_input, context)
             print(bot_answer)
 
 
@@ -136,8 +148,7 @@ class ProductManager:
 
 def main():
     chatbot = ChatBot()
-    # chatbot.chat()
-    print(chatbot.get_product_context('N006'))
+    chatbot.chat()
 
 
 if __name__ == '__main__':
