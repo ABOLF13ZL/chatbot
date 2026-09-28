@@ -60,6 +60,9 @@ class ChatBot:
     def get_product(self, code):
         return self.product_manager.get_product(code)
 
+    def format_product(self, product):
+        return f'Product code: {product['code']}\nProduct name: {product['name']}\nPrice: {product['price']}\nStock: {product['stock']}'
+
     def get_response(self, message):
         try:
             self.messages.append({'role': 'user', 'content': message})
