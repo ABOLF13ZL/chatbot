@@ -65,6 +65,8 @@ class ChatBot:
 
     def get_product_context(self, code):
         product = self.get_product(code)
+        if product is None:
+            return ('This product does not exist.')
         return self.format_product(product)
 
     def get_response(self, message):
@@ -135,7 +137,7 @@ class ProductManager:
 def main():
     chatbot = ChatBot()
     # chatbot.chat()
-    print(chatbot.get_product_context('N001'))
+    print(chatbot.get_product_context('N006'))
 
 
 if __name__ == '__main__':
