@@ -76,7 +76,9 @@ Keep your answers short and clear.'''}
     def extract_product_code(self, message):
         text = message.split()
         for word in text:
-            if word.startwith('N') and word[1:].isdigit():
+            word = word.strip("'s/,;?:")
+
+            if word.startswith('N') and word[1:].isdigit():
                 return word
 
     def get_response(self, message, context=''):
@@ -107,7 +109,10 @@ Keep your answers short and clear.'''}
                 print(result)
                 continue
 
-            context = self.get_product_context('N005')
+            product_code = self.extract_product_code(user_input)
+            context = ''
+            if product_code is not None:
+                context = self.get_product_context(product_code)
             bot_answer = self.get_response(user_input, context)
             print(bot_answer)
 
