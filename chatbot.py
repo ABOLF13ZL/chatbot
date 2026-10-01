@@ -70,12 +70,11 @@ Keep your answers short and clear.'''}
     def get_product_context(self, code='', name=''):
         product_code = self.get_product_by_code(code)
         product_name = self.get_product_by_name(name)
-        if product_code is None:
-            if product_name is None:
-                return ('This product does not exist.')
-            return self.format_product(product_name)
-        else:
+        if product_code is not None:
             return self.format_product(product_code)
+        elif product_name is not None:
+            return self.format_product(product_name)
+        return ('This product does not exist.')
 
     def extract_product_code(self, message):
         text = message.split()
