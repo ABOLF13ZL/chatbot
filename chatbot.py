@@ -61,17 +61,21 @@ Keep your answers short and clear.'''}
         elif command == '/q':
             return True
 
-    def get_product(self, code):
+    def get_product_by_code(self, code):
         return self.product_manager.get_product_by_code(code)
 
     def format_product(self, product):
         return f'Product code: {product['code']}\nProduct name: {product['name']}\nPrice: {product['price']}\nStock: {product['stock']}'
 
-    def get_product_context(self, code):
-        product = self.get_product(code)
-        if product is None:
-            return ('This product does not exist.')
-        return self.format_product(product)
+    def get_product_context(self, code='', name=''):
+        product_code = self.get_product_by_code(code)
+        product_name = self.get_product_by_name(name)
+        if product_code is None:
+            if product_name is None:
+                return ('This product does not exist.')
+            return self.format_product(product_name)
+        else:
+            return self.format_product(product_code)
 
     def extract_product_code(self, message):
         text = message.split()
@@ -80,6 +84,16 @@ Keep your answers short and clear.'''}
 
             if word.startswith('N') and word[1:].isdigit():
                 return word
+
+    def get_product_by_name(self, name):
+        return self.product_manager.get_product_by_name(name)
+
+    def extract_product_name(self, message):
+        text = message.lower()
+        products = self.product_manager.load_products()
+        for product in products:
+            if product['name'] in text:
+                return product['name']
 
     def get_response(self, message, context=''):
         try:
@@ -110,9 +124,12 @@ Keep your answers short and clear.'''}
                 continue
 
             product_code = self.extract_product_code(user_input)
+            product_name = self.extract_product_name(user_input)
             context = ''
             if product_code is not None:
-                context = self.get_product_context(product_code)
+                context = self.get_product_context(code=product_code)
+            elif product_name is not None:
+                context = self.get_product_context(name=product_name)
             bot_answer = self.get_response(user_input, context)
             print(bot_answer)
 
@@ -132,7 +149,7 @@ class ProductManager:
                 return product
         else:
             return None
-        
+
     def get_product_by_name(self, name):
         for product in self.load_products():
             if product['name'] == name:
